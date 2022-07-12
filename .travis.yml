@@ -22,3 +22,35 @@
     # 스크립트(테스트)가 성공한 이후 할 일 설정
     after_success:
         - echo "Test Success"
+
+    deploy:
+      # 외부 서비스 표시(S3, EB, firebase 등)
+      provider: elasticbeanstalk
+
+      # 현재 사용하고 있는 AWS 서비스가 위치하고 있는 물리적 장소
+      # EB에서 생성된 application의 정보에 적혀있다.
+      region: "ap-northeast-2"
+
+      # EB에 생성된 어플리케이션의 이름
+      app: "docker-react-app"
+
+      # EB의 환경
+      env: "DockerReactApp-env"
+
+      # 해당 elasticbeanstalk을 위한 s3 버켓이름,
+      # 왜 사용하는가? 
+      # travis CI에서 바로 EB로 파일을 보내는 것이 아니라
+      # Amazon S3으로 파일을 "압축"해서 보낸다.
+      # 압축한 파일이 bucket인듯
+      bucket_name: "elasticbeanstalk-ap-northeast-2-213500918601"
+      # bucket_path는 어플리케이션 이름과 같다.
+      bucket_path: "docker-react-app"
+
+      # Github과 관련된 부분,
+      on:
+          # 깃에 여러 branch가 있는데,
+          # 어떤 branch에 push가 되었을 때 배포를 할 것인지를 설정
+          branch: master
+    
+    access_key_id: $AWS_ACCESS_KEY
+    secret_access_key: $AWS_SECRET_KEY
